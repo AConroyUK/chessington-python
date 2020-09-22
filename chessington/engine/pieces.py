@@ -45,20 +45,21 @@ class Pawn(Piece):
             start_row = 1
 
         #vertical moves
-        if board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col)) == None:
-            moves.append(Square.at(current_square.row+(1*multiplier),current_square.col))
-            if current_square.row == start_row and \
-            board.get_piece(Square.at(current_square.row+(2*multiplier),current_square.col)) == None:
-                moves.append(Square.at(row=current_square.row+(2*multiplier),col=current_square.col))
+        if current_square.row+(1*multiplier) >= 0 and current_square.row+(1*multiplier) <= 7 :
+            if board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col)) == None:
+                moves.append(Square.at(current_square.row+(1*multiplier),current_square.col))
+                if current_square.row == start_row and \
+                board.get_piece(Square.at(current_square.row+(2*multiplier),current_square.col)) == None:
+                    moves.append(Square.at(row=current_square.row+(2*multiplier),col=current_square.col))
 
         #diagonal moves
-        for horizontal in [-1,1]:
-            if current_square.col+(2*horizontal) >= 0 and current_square.col+(2*horizontal) <= 7:
-                piece = board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))
-                if piece != None:
-                    if piece.player != self.player:
-                        if board.get_piece(Square.at(current_square.row+(2*multiplier),current_square.col+(2*horizontal))) == None:
-                            moves.append(Square.at(current_square.row+(2*multiplier),current_square.col+(2*horizontal)))
+        if current_square.row+(1*multiplier) >= 0 and current_square.row+(1*multiplier) <= 7 :
+            for horizontal in [-1,1]:
+                if current_square.col+(1*horizontal) >= 0 and current_square.col+(1*horizontal) <= 7:
+                    piece = board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))
+                    if piece != None:
+                        if piece.player != self.player:
+                            moves.append(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))                            
 
         return moves
 
