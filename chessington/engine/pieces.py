@@ -35,7 +35,32 @@ class Pawn(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        moves = []
+        multiplier = -1
+        start_row = 6
+
+        current_square = board.find_piece(self)
+        if self.player == Player.WHITE:
+            multiplier = 1
+            start_row = 1
+
+        #vertical moves
+        if board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col)) == None:
+            moves.append(Square.at(current_square.row+(1*multiplier),current_square.col))
+            if current_square.row == start_row and \
+            board.get_piece(Square.at(current_square.row+(2*multiplier),current_square.col)) == None:
+                moves.append(Square.at(row=current_square.row+(2*multiplier),col=current_square.col))
+
+        #diagonal moves
+        for horizontal in [-1,1]:
+            if current_square.col+(2*horizontal) >= 0 and current_square.col+(2*horizontal) <= 7:
+                piece = board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))
+                if piece != None:
+                    if piece.player != self.player:
+                        if board.get_piece(Square.at(current_square.row+(2*multiplier),current_square.col+(2*horizontal))) == None:
+                            moves.append(Square.at(current_square.row+(2*multiplier),current_square.col+(2*horizontal)))
+
+        return moves
 
 
 class Knight(Piece):
