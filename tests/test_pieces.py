@@ -1,6 +1,6 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn, Rook
+from chessington.engine.pieces import *
 
 class TestKnights:
 
@@ -47,7 +47,7 @@ class TestKnights:
         board.set_piece(square, knight)
 
         # Act
-        moves = rook.get_available_moves(board)
+        moves = knight.get_available_moves(board)
 
         # Assert
         assert Square.at(2, 8) not in moves

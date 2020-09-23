@@ -6,6 +6,9 @@ from abc import ABC, abstractmethod
 
 from chessington.engine.data import Player, Square
 
+def inBounds(num):
+    return num >= 0 and num <= 7
+
 class Piece(ABC):
     """
     An abstract base class from which all pieces inherit.
@@ -45,7 +48,7 @@ class Pawn(Piece):
             start_row = 1
 
         #vertical moves
-        if current_square.row+(1*multiplier) >= 0 and current_square.row+(1*multiplier) <= 7 :
+        if inBounds(current_square.row+(1*multiplier)):
             if board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col)) == None:
                 moves.append(Square.at(current_square.row+(1*multiplier),current_square.col))
                 if current_square.row == start_row and \
@@ -53,9 +56,9 @@ class Pawn(Piece):
                     moves.append(Square.at(row=current_square.row+(2*multiplier),col=current_square.col))
 
         #diagonal moves
-        if current_square.row+(1*multiplier) >= 0 and current_square.row+(1*multiplier) <= 7 :
+        if inBounds(current_square.row+(1*multiplier)):
             for horizontal in [-1,1]:
-                if current_square.col+(1*horizontal) >= 0 and current_square.col+(1*horizontal) <= 7:
+                if inBounds(current_square.col+(1*horizontal)):
                     piece = board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))
                     if piece != None:
                         if piece.player != self.player:
@@ -70,7 +73,20 @@ class Knight(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        moves = []
+        list = [(-2,-1),(-1,-2),(1,-2),(2,-1),(2,1),(1,2),(-1,2),(-2,1)]
+        current_square = board.find_piece(self)
+        for vertical,horizontal in list:
+            if inBounds(current_square.row+vertical) and inBounds(current_square.col+horizontal):
+                square = Square.at(current_square.row+vertical,current_square.col+horizontal)
+                piece = board.get_piece(square)
+                if piece == None:
+                    moves.append(square)
+                else:
+                    if piece.player != self.player:
+                        moves.append(square)
+
+        return moves
 
 
 class Bishop(Piece):
@@ -92,7 +108,7 @@ class Rook(Piece):
 
         current_square = board.find_piece(self)
 
-        for direction in [1,-1]:            
+        for direction in [1,-1]:
             if direction == 1: max = 8
             else: max = -1
 
