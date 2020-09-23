@@ -82,9 +82,8 @@ class Knight(Piece):
                 piece = board.get_piece(square)
                 if piece == None:
                     moves.append(square)
-                else:
-                    if piece.player != self.player:
-                        moves.append(square)
+                elif piece.player != self.player:
+                    moves.append(square)
 
         return moves
 
@@ -95,7 +94,22 @@ class Bishop(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        moves = []
+        current_square = board.find_piece(self)
+        for vertical,horizontal in [(1,1),(1,-1),(-1,1),(-1,-1)]:
+            for i in range(1,8):
+                if inBounds(current_square.row+(vertical*i)) and inBounds(current_square.col+(horizontal*i)):
+                     square = Square.at(current_square.row+(vertical*i),current_square.col+(horizontal*i))
+                     piece = board.get_piece(square)
+                     if piece == None:
+                         moves.append(square)
+                     elif piece.player != self.player:
+                         moves.append(square)
+                         break
+                     else:
+                         break
+
+        return moves
 
 
 class Rook(Piece):
