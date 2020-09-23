@@ -1,6 +1,224 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn
+from chessington.engine.pieces import Pawn, Rook
+
+class TestRooks:
+
+    @staticmethod
+    def test_rooks_can_move_up_multiple_squares():
+        complete_moves = [Square.at(4, 4),Square.at(5, 4),Square.at(6, 4),Square.at(7, 4)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        square = Square.at(3, 4)
+        board.set_piece(square, rook)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move in moves
+
+    @staticmethod
+    def test_rooks_can_move_down_multiple_squares():
+        complete_moves = [Square.at(2, 4),Square.at(1, 4),Square.at(0, 4)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        square = Square.at(3, 4)
+        board.set_piece(square, rook)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move in moves
+
+    @staticmethod
+    def test_rooks_can_move_left_multiple_squares():
+        complete_moves = [Square.at(3, 3),Square.at(3, 2),Square.at(3, 1),Square.at(3, 0)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        square = Square.at(3, 4)
+        board.set_piece(square, rook)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move in moves
+
+    @staticmethod
+    def test_rooks_can_move_right_multiple_squares():
+        complete_moves = [Square.at(3, 5),Square.at(3, 6),Square.at(3, 7)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        square = Square.at(3, 4)
+        board.set_piece(square, rook)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move in moves
+
+    @staticmethod
+    def test_rook_cannot_move_up_if_piece_in_front():
+        moves_list = [Square.at(5, 4),Square.at(6, 4),Square.at(7, 4)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(4, 4)
+        board.set_piece(rook_square, rook)
+
+        obstructing_square = Square.at(5, 4)
+        obstruction = Rook(Player.WHITE)
+        board.set_piece(obstructing_square, obstruction)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        for move in moves_list:
+            # Assert
+            assert move not in moves
+
+    @staticmethod
+    def test_rook_cannot_move_down_if_piece_in_front():
+        moves_list = [Square.at(3, 4),Square.at(2, 4),Square.at(1, 4),Square.at(0, 4)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(4, 4)
+        board.set_piece(rook_square, rook)
+
+        obstructing_square = Square.at(3, 4)
+        obstruction = Rook(Player.WHITE)
+        board.set_piece(obstructing_square, obstruction)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        for move in moves_list:
+            # Assert
+            assert move not in moves
+
+    @staticmethod
+    def test_rook_cannot_move_left_if_piece_in_front():
+        moves_list = [Square.at(4, 3),Square.at(4, 2),Square.at(4, 1),Square.at(4, 0)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(4, 4)
+        board.set_piece(rook_square, rook)
+
+        obstructing_square = Square.at(4, 3)
+        obstruction = Rook(Player.WHITE)
+        board.set_piece(obstructing_square, obstruction)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        for move in moves_list:
+            # Assert
+            assert move not in moves
+
+    @staticmethod
+    def test_rook_cannot_move_right_if_piece_in_front():
+        moves_list = [Square.at(4, 5),Square.at(4, 6),Square.at(4, 7)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(4, 4)
+        board.set_piece(rook_square, rook)
+
+        obstructing_square = Square.at(4, 5)
+        obstruction = Rook(Player.WHITE)
+        board.set_piece(obstructing_square, obstruction)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        for move in moves_list:
+            # Assert
+            assert move not in moves
+
+    @staticmethod
+    def test_rooks_cannot_move_out_of_bounds():
+        moves_list = [Square.at(-1, 4),Square.at(8, 4),Square.at(4, 8),Square.at(4, -1)]
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, rook)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move not in moves
+
+    @staticmethod
+    def test_rooks_can_capture_horizontally():
+
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(3, 5)
+        board.set_piece(enemy1_square, enemy1)
+
+        enemy2 = Pawn(Player.BLACK)
+        enemy2_square = Square.at(3, 3)
+        board.set_piece(enemy2_square, enemy2)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert enemy1_square in moves
+        assert enemy2_square in moves
+        assert Square.at(3,6) not in moves
+        assert Square.at(3,2) not in moves
+
+    @staticmethod
+    def test_rooks_can_capture_vertically():
+
+        # Arrange
+        board = Board.empty()
+        rook = Rook(Player.WHITE)
+        rook_square = Square.at(3, 4)
+        board.set_piece(rook_square, rook)
+
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(4, 4)
+        board.set_piece(enemy1_square, enemy1)
+
+        enemy2 = Pawn(Player.BLACK)
+        enemy2_square = Square.at(2, 4)
+        board.set_piece(enemy2_square, enemy2)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert enemy1_square in moves
+        assert enemy2_square in moves
+        assert Square.at(5,4) not in moves
+        assert Square.at(1,4) not in moves
 
 class TestPawns:
 
