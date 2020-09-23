@@ -2,6 +2,79 @@ from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
 from chessington.engine.pieces import *
 
+class TestBishops:
+    @staticmethod
+    def test_bishops_moves():
+        complete_moves = [Square.at(5, 5),Square.at(3, 3),Square.at(5, 3),Square.at(3, 5),Square.at(7, 7)]
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, bishop)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move in moves
+
+    @staticmethod
+    def test_bishops_moves_with_obstruction():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, bishop)
+
+        obstructing_square = Square.at(2, 2)
+        obstruction = Rook(Player.WHITE)
+        board.set_piece(obstructing_square, obstruction)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert obstructing_square not in moves
+
+    @staticmethod
+    def test_bishops_boundary_moves():
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, bishop)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert Square.at(8, 8) not in moves
+
+    @staticmethod
+    def test_bishops_can_capture():
+
+        # Arrange
+        board = Board.empty()
+        bishop = Bishop(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, bishop)
+
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(2, 2)
+        board.set_piece(enemy1_square, enemy1)
+
+        enemy2 = Pawn(Player.BLACK)
+        enemy2_square = Square.at(5, 5)
+        board.set_piece(enemy2_square, enemy2)
+
+        # Act
+        moves = bishop.get_available_moves(board)
+
+        # Assert
+        assert enemy1_square in moves
+        assert enemy2_square in moves
+
 class TestKnights:
 
     @staticmethod
