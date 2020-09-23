@@ -164,7 +164,7 @@ class TestRooks:
         # Act
         moves = rook.get_available_moves(board)
 
-        for move in complete_moves:
+        for move in moves_list:
             # Assert
             assert move not in moves
 

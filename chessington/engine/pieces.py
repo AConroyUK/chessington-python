@@ -59,7 +59,7 @@ class Pawn(Piece):
                     piece = board.get_piece(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))
                     if piece != None:
                         if piece.player != self.player:
-                            moves.append(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))                            
+                            moves.append(Square.at(current_square.row+(1*multiplier),current_square.col+(1*horizontal)))
 
         return moves
 
@@ -88,7 +88,36 @@ class Rook(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        moves = []
+
+        current_square = board.find_piece(self)
+
+        for direction in [1,-1]:            
+            if direction == 1: max = 8
+            else: max = -1
+
+            for vertical in range(current_square.row+direction,max,direction):
+                square = Square.at(vertical,current_square.col)
+                piece = board.get_piece(square)
+                if piece == None:
+                    moves.append(square)
+                elif piece.player != self.player:
+                    moves.append(square)
+                    break
+                else:
+                    break
+            for horizontal in range(current_square.col+direction,max,direction):
+                square = Square.at(current_square.row,horizontal)
+                piece = board.get_piece(square)
+                if piece == None:
+                    moves.append(square)
+                elif piece.player != self.player:
+                    moves.append(square)
+                    break
+                else:
+                    break
+
+        return moves
 
 
 class Queen(Piece):
