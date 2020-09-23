@@ -2,6 +2,81 @@ from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
 from chessington.engine.pieces import Pawn, Rook
 
+class TestKnights:
+
+    @staticmethod
+    def test_knights_moves():
+        complete_moves = [Square.at(2, 2),Square.at(4, 2),Square.at(5, 3),Square.at(5, 5),Square.at(4, 6),Square.at(2, 6),Square.at(1, 5),Square.at(1, 3)]
+        # Arrange
+        board = Board.empty()
+        knight = Knight(Player.WHITE)
+        square = Square.at(3, 4)
+        board.set_piece(square, knight)
+
+        # Act
+        moves = knight.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move in moves
+
+    @staticmethod
+    def test_knights_moves_with_obstruction():
+        # Arrange
+        board = Board.empty()
+        knight = Knight(Player.WHITE)
+        square = Square.at(3, 4)
+        board.set_piece(square, knight)
+
+        obstructing_square = Square.at(2, 2)
+        obstruction = Rook(Player.WHITE)
+        board.set_piece(obstructing_square, obstruction)
+
+        # Act
+        moves = knight.get_available_moves(board)
+
+        # Assert
+        assert obstructing_square not in moves
+
+    @staticmethod
+    def test_knights_boundary_moves():
+        # Arrange
+        board = Board.empty()
+        knight = Knight(Player.WHITE)
+        square = Square.at(3, 6)
+        board.set_piece(square, knight)
+
+        # Act
+        moves = rook.get_available_moves(board)
+
+        # Assert
+        assert Square.at(2, 8) not in moves
+
+    @staticmethod
+    def test_knights_can_capture():
+
+        # Arrange
+        board = Board.empty()
+        knight = Knight(Player.WHITE)
+        knight_square = Square.at(3, 4)
+        board.set_piece(knight_square, knight)
+
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(2, 2)
+        board.set_piece(enemy1_square, enemy1)
+
+        enemy2 = Pawn(Player.BLACK)
+        enemy2_square = Square.at(5, 5)
+        board.set_piece(enemy2_square, enemy2)
+
+        # Act
+        moves = knight.get_available_moves(board)
+
+        # Assert
+        assert enemy1_square in moves
+        assert enemy2_square in moves
+
+
 class TestRooks:
 
     @staticmethod
