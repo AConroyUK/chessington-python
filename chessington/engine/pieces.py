@@ -205,6 +205,24 @@ class King(Piece):
     """
     A class representing a chess king.
     """
+    def in_check(self,board,square):
+        return False
 
     def get_available_moves(self, board):
-        return []
+        moves = []
+        current_square = board.find_piece(self)
+        for vertical in [-1,0,1]:
+            for horizontal in [-1,0,1]:
+                square = Square.at(current_square.row+vertical,current_square.col+horizontal)
+                if square != current_square and inBounds(square.row) and inBounds(square.col):
+                    piece = board.get_piece(square)
+                    if not self.in_check(board,square):
+                        if piece is None:
+                            moves.append(square)
+                        elif piece.player != self.player:
+                            moves.append(square)
+
+
+
+
+        return moves

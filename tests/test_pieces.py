@@ -2,6 +2,107 @@ from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
 from chessington.engine.pieces import *
 
+class TestKing:
+    @staticmethod
+    def test_king_moves():
+        complete_moves = [Square.at(5, 5),Square.at(5, 4),Square.at(5, 3),Square.at(4, 3),Square.at(3, 3),Square.at(3, 4),Square.at(3, 5),Square.at(4, 5)]
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        for move in complete_moves:
+            # Assert
+            assert move in moves
+
+    @staticmethod
+    def test_king_moves_with_obstruction():
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, king)
+
+        obstructing_square = Square.at(3, 3)
+        obstruction = Rook(Player.WHITE)
+        board.set_piece(obstructing_square, obstruction)
+
+        obstructing_square2 = Square.at(4, 3)
+        obstruction2 = Rook(Player.WHITE)
+        board.set_piece(obstructing_square2, obstruction2)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert obstructing_square not in moves
+        assert obstructing_square2 not in moves
+
+    @staticmethod
+    def test_king_can_castle():
+        pass
+
+    @staticmethod
+    def test_king_cannot_move_into_check():
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, king)
+
+        obstructing_square = Square.at(6, 4)
+        obstruction = Bishop(Player.BLACK)
+        board.set_piece(obstructing_square, obstruction)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert Square.at(5, 3) not in moves
+        assert Square.at(5, 5) not in moves
+
+    @staticmethod
+    def test_king_boundary_moves():
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(7, 7)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert Square.at(8, 8) not in moves
+
+    @staticmethod
+    def test_kings_can_capture():
+
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(4, 4)
+        board.set_piece(square, king)
+
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(5, 5)
+        board.set_piece(enemy1_square, enemy1)
+
+        enemy2 = Pawn(Player.BLACK)
+        enemy2_square = Square.at(5, 3)
+        board.set_piece(enemy2_square, enemy2)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert enemy1_square in moves
+        assert enemy2_square in moves
+
 class TestQueen:
     @staticmethod
     def test_queens_moves():
